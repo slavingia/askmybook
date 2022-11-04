@@ -2,20 +2,17 @@
 {% load static %}
 
 {% block content %}
-  <div class="container">
 
-
-<h2>Page View Report</h2>
-
+<h2>Questions</h2>
 
 <ul>
-
-{% for greeting in greetings %}
-    <li>{{ greeting.when }}</li>
-{% endfor %}
-
+  {% for question in questions %}
+      <li>
+        <strong>{{ question.question }}</strong>
+        <p>{{ question.answer }}</p>
+        <p><small>Asked {{ question.ask_count }} times</small></p>
+      </li>
+  {% endfor %}
 </ul>
-
-</div>
 
 {% endblock %}
