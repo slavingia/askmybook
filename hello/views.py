@@ -6,7 +6,7 @@ from .models import Greeting
 import pandas as pd
 import openai
 import numpy as np
-from transformers import GPT2TokenizerFast
+# from transformers import GPT2TokenizerFast
 
 openai.api_key = "sk-DOiDZHHE1f1tvxnO5zs103vHelanA6BVBVO44cN7"
 
@@ -19,9 +19,7 @@ QUERY_EMBEDDINGS_MODEL = f"text-search-{MODEL_NAME}-query-001"
 
 MAX_SECTION_LEN = 500
 SEPARATOR = "\n* "
-
-tokenizer = GPT2TokenizerFast.from_pretrained("gpt2")
-separator_len = len(tokenizer.tokenize(SEPARATOR))
+separator_len = 3
 
 COMPLETIONS_API_PARAMS = {
     # We use temperature of 0.0 because it gives the most predictable, factual answer.
@@ -143,8 +141,6 @@ def ask(request):
     print(df.sample(5))
 
     document_embeddings = load_embeddings("embeddings.csv")
-
-    f"Context separator contains {separator_len} tokens"
 
     answer = answer_query_with_context(question, df, document_embeddings)
 
