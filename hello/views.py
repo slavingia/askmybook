@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.templatetags.static import static
 
 from .models import Greeting
 
@@ -136,10 +135,10 @@ def index(request):
 def ask(request):
     question = request.POST.get("question", "")
 
-    df = pd.read_csv(static('pages.csv'))
+    df = pd.read_csv("https://askbook.s3.us-east-1.amazonaws.com/pages.csv?response-content-disposition=inline&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEPT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCosaeIJrUiCuzmLKO2PgXleWPusM85rA0iDsUqZmUNWQIgPwJAqgNu%2BtJyEfD0m0zvIWpgBWyrwtNH449DpPbHJDEq7QII3f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARACGgw1OTkzNTI3OTA5NzgiDMyp840t9%2FPinfvxQSrBAh0gXgLija9B8WABaoVjfJlR%2B11eQiks2cxjW0YVeJ4KJYqaS8gkO0tZ%2FcoSnsoQ%2FdmlLuv6z7qHAN3L5s1Yd%2BP4m65JQ%2B0icnQnh8SEE3K0cx2JDlQ9Uf3EVciwujswpYtVu8JbRQAE40rYcHlhkHbA9r5FGw13NbL7Y9Z9dpuBcnLDSgbxo%2BQQSKE9dkLe8C70T9oF1A5ejREpZ2dG4xUZTUouiNFB%2BW586C23hWMsn0kP1z5esWxFFuGIzxY8HwVvpj%2Fe8IBU%2BkO1cabXjNAygx8iKLU1nLQcor1QmZYw1F7CgqLrm22oQT%2FGf%2FGGvp5AL2SGAryQxHeyf2Hz3%2BOABGJYUd5DE7FO4PyyGBHJw1kLcZUflNOCbUIVyGF2dWi6sATZJcxz06i%2FUb6z06z2fEWeNQiNMOHOFxCQ%2FvSvXjD93pWbBjqzAsnHm1Wz7Gk5L6FR4v%2FyrgVDiKaow6b7G5hmLd4xba%2FBuiwfuntO1oSew99oUy0i0aigsjFoAN%2FEvIcXzvFiP%2BqHnBsVjiOB%2BkAP%2F1oxd3fTJvZ6ezzp3DHwb%2BHnod%2FwA93A0Bh6%2FT4WBDFNkBNRxfFb%2F9M4xba477vg9mg%2Fb0%2F7excYq7RY8AcZ%2F%2FAxBeMHZjhwpRyKZC4FBB3JYTjoGEbDSF7NhijX%2FZKmNQcN0HQ7n6%2FOs1%2F0%2F3nRUCtUTJUgL%2FQypxsDL55%2FW9jM5Wv0f7nyopaGDQZ2mKMZwyeUSpL%2B%2BVP3wsapWU6jQnfvWvCa%2F4qEd5flSt11yj8O90iuGweKz22f6AfJhOMF6aFh1Pu97e85AbzVsPVO%2FdzaXqz2mnY9gxb4CPezeHGScqaS3kkWE30%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20221104T200413Z&X-Amz-SignedHeaders=host&X-Amz-Expires=43200&X-Amz-Credential=ASIAYXDBVZ7BOCJHYKXV%2F20221104%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=cbabc981e72dab93354b87021a8d84cd49df9bd4cb43980ea789ef666262f22f")
     df = df.set_index(["title"])
 
-    document_embeddings = load_embeddings(static("embeddings.csv"))
+    document_embeddings = load_embeddings("https://askbook.s3.us-east-1.amazonaws.com/embeddings.csv?response-content-disposition=inline&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEPT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCosaeIJrUiCuzmLKO2PgXleWPusM85rA0iDsUqZmUNWQIgPwJAqgNu%2BtJyEfD0m0zvIWpgBWyrwtNH449DpPbHJDEq7QII3f%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARACGgw1OTkzNTI3OTA5NzgiDMyp840t9%2FPinfvxQSrBAh0gXgLija9B8WABaoVjfJlR%2B11eQiks2cxjW0YVeJ4KJYqaS8gkO0tZ%2FcoSnsoQ%2FdmlLuv6z7qHAN3L5s1Yd%2BP4m65JQ%2B0icnQnh8SEE3K0cx2JDlQ9Uf3EVciwujswpYtVu8JbRQAE40rYcHlhkHbA9r5FGw13NbL7Y9Z9dpuBcnLDSgbxo%2BQQSKE9dkLe8C70T9oF1A5ejREpZ2dG4xUZTUouiNFB%2BW586C23hWMsn0kP1z5esWxFFuGIzxY8HwVvpj%2Fe8IBU%2BkO1cabXjNAygx8iKLU1nLQcor1QmZYw1F7CgqLrm22oQT%2FGf%2FGGvp5AL2SGAryQxHeyf2Hz3%2BOABGJYUd5DE7FO4PyyGBHJw1kLcZUflNOCbUIVyGF2dWi6sATZJcxz06i%2FUb6z06z2fEWeNQiNMOHOFxCQ%2FvSvXjD93pWbBjqzAsnHm1Wz7Gk5L6FR4v%2FyrgVDiKaow6b7G5hmLd4xba%2FBuiwfuntO1oSew99oUy0i0aigsjFoAN%2FEvIcXzvFiP%2BqHnBsVjiOB%2BkAP%2F1oxd3fTJvZ6ezzp3DHwb%2BHnod%2FwA93A0Bh6%2FT4WBDFNkBNRxfFb%2F9M4xba477vg9mg%2Fb0%2F7excYq7RY8AcZ%2F%2FAxBeMHZjhwpRyKZC4FBB3JYTjoGEbDSF7NhijX%2FZKmNQcN0HQ7n6%2FOs1%2F0%2F3nRUCtUTJUgL%2FQypxsDL55%2FW9jM5Wv0f7nyopaGDQZ2mKMZwyeUSpL%2B%2BVP3wsapWU6jQnfvWvCa%2F4qEd5flSt11yj8O90iuGweKz22f6AfJhOMF6aFh1Pu97e85AbzVsPVO%2FdzaXqz2mnY9gxb4CPezeHGScqaS3kkWE30%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20221104T200509Z&X-Amz-SignedHeaders=host&X-Amz-Expires=43199&X-Amz-Credential=ASIAYXDBVZ7BOCJHYKXV%2F20221104%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=ee12dc9fa9e57c1e740bdd243e5b4e4376425e60ae064b4ed7b57d28df2dac24")
 
     answer = answer_query_with_context(question, df, document_embeddings)
 
