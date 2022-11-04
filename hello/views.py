@@ -88,9 +88,6 @@ def construct_prompt(question: str, context_embeddings: dict, df: pd.DataFrame) 
     chosen_sections_indexes = []
 
     for _, section_index in most_relevant_document_sections:
-        # Add contexts until we run out of space.
-        print(section_index)
-        print(df.loc[section_index])
         document_section = df.loc[section_index]
 
         chosen_sections_len += document_section.tokens + separator_len
@@ -99,10 +96,6 @@ def construct_prompt(question: str, context_embeddings: dict, df: pd.DataFrame) 
 
         chosen_sections.append(SEPARATOR + document_section.content)
         chosen_sections_indexes.append(str(section_index))
-
-    # Useful diagnostic information
-    # print(f"Selected {len(chosen_sections)} document sections:")
-    # print("\n".join(chosen_sections_indexes))
 
     header = """Answer the question as truthfully as possible using the provided context, and if the answer is not contained within the text below, say "I don't know."\n\nContext:\n"""
     header = """Context:\n"""
