@@ -6,8 +6,10 @@ from .models import Question
 import pandas as pd
 import openai
 import numpy as np
-# from transformers import GPT2TokenizerFast
 
+from resemble import Resemble
+
+Resemble.api_key('0vWhLtB2fmjVIE0Nuzic5wtt')
 openai.api_key = "sk-DOiDZHHE1f1tvxnO5zs103vHelanA6BVBVO44cN7"
 
 COMPLETIONS_MODEL = "text-davinci-002"
@@ -146,6 +148,24 @@ def ask(request):
 
     question = Question(question=question, answer=answer)
     question.save()
+
+    project_uuid = '6314e4df'
+    voice_uuid = '0eb3a3f1'
+    callback_uri = 'https://askbook.herokuapp.com/callback/resemble-clip'
+
+    Resemble.v2.clips.create_async(
+        project_uuid,
+        voice_uuid,
+        callback_uri,
+        answer,
+        title=None,
+        sample_rate=None,
+        output_format=None,
+        precision=None,
+        include_timestamps=None,
+        is_public=None,
+        is_archived=None
+    )
 
     return render(request, "answer.html", { "answer": answer, "question": question.question })
 
