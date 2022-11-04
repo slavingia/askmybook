@@ -8,10 +8,19 @@
   <small>(about The Minimalist Entrepreneur)</small>
 </h1>
 
-<form action="/ask" method="post">
+<form action="/ask" method="post" onSubmit="return empty()">
   {% csrf_token %}
-  <textarea autofocus="autofocus" name="question">How do I decide what kind of business I should start?</textarea>
+  <textarea autofocus="autofocus" name="question" id="question">How do I decide what kind of business I should start?</textarea>
   <button type="submit">Ask</button>
 </form>
+
+<script>
+  function empty() {
+    if (document.getElementById("question").value == "") {
+      alert("Please ask a question!");
+      return false;
+    };
+  }
+</script>
 
 {% endblock %}
