@@ -4,3 +4,4 @@ dj-database-url>=1.0,<2.0
 whitenoise>=6.0,<7.0
 psycopg2>=2.0,<3.0
 livereload>=2.6.3
+pandas>=1.5.0
