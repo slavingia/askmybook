@@ -151,12 +151,10 @@ def ask(request):
 
     project_uuid = '6314e4df'
     voice_uuid = '0eb3a3f1'
-    callback_uri = 'https://askbook.herokuapp.com/callback/resemble-clip'
 
-    Resemble.v2.clips.create_sync(
+    response = Resemble.v2.clips.create_sync(
         project_uuid,
         voice_uuid,
-        callback_uri,
         answer,
         title=None,
         sample_rate=None,
@@ -164,16 +162,14 @@ def ask(request):
         precision=None,
         include_timestamps=None,
         is_public=None,
-        is_archived=None
+        is_archived=None,
+        raw=None
     )
 
-    return render(request, "answer.html", { "answer": answer, "question": question.question })
-
-def callback_resemble_clip(request):
-    question = Question.objects.filter(id=request.POST.get("id", ""))
-    question.audio_src_url = request.POST.get("audio_src_url", "")
+    question.audio_src_url = response['item']['audio_src']
     question.save()
-    return HttpResponse('')
+
+    return render(request, "answer.html", { "answer": answer, "question": question.question, "audio_src_url": question.audio_src_url })
 
 def db(request):
     questions = Question.objects.all().order_by('-ask_count')

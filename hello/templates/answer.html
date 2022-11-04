@@ -13,10 +13,8 @@
   Answer:
 </h1>
 
-<p>{{ answer }}</p>
-
 {% if audio_src_url %}
-  <audio controls>
+  <audio controls autoplay>
     <source src="{{ audio_src_url }}" type="audio/wav">
   </audio>
 {% endif %}
