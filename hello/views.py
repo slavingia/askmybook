@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.templatetags.static import static
 
 from .models import Greeting
 
@@ -135,12 +136,10 @@ def index(request):
 def ask(request):
     question = request.POST.get("question", "")
 
-    df = pd.read_csv('pages.csv')
+    df = pd.read_csv(static('pages.csv'))
     df = df.set_index(["title"])
-    print(f"{len(df)} rows in the data.")
-    print(df.sample(5))
 
-    document_embeddings = load_embeddings("embeddings.csv")
+    document_embeddings = load_embeddings(static("embeddings.csv"))
 
     answer = answer_query_with_context(question, df, document_embeddings)
 
