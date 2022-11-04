@@ -3,10 +3,15 @@
 
 {% block content %}
 
-<textarea>Ask me anything... (about The Minimalist Entrepreneur)</textarea>
+<h1>
+  Ask me anything
+  <small>(about The Minimalist Entrepreneur)</small>
+</h1>
 
-<form>
-  <textarea>Start typing...</textarea>
+<form action="/ask" method="post">
+  {% csrf_token %}
+  <textarea autofocus="autofocus" name="question">How do I decide what kind of business I should start?</textarea>
+  <button type="submit">Ask</button>
 </form>
 
 {% endblock %}
