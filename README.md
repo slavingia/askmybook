@@ -6,7 +6,7 @@
 
 ### Website / API
 
-- `heroku local` from `python-getting-started` folder to run locally
+- `heroku local` to run locally
 
 This application supports the [Getting Started with Python on Heroku](https://devcenter.heroku.com/articles/getting-started-with-python) article - check it out for instructions on how to deploy this app to Heroku and also run it locally.
 
