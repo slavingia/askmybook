@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<h1>
+  Ask me anything
+  <small>(about The Minimalist Entrepreneur)</small>
+</h1>
+
+<form action="/ask" method="post">
+  {% csrf_token %}
+  <textarea autofocus="autofocus" name="question">How do I decide what kind of business I should start?</textarea>
+  <button type="submit">Ask</button>
+</form>
+
+{% endblock %}

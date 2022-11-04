@@ -35,3 +35,11 @@ yarn-error.log*
 
 # generated data files
 *.csv
+
+# from python heroku
+venv
+*.pyc
+staticfiles
+.env
+db.sqlite3
+getting-started/*
