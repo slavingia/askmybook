@@ -38,14 +38,13 @@
         datatype: "json",
         encode: true
       }).done(function(data) {
-        console.log(data);
-
         let audioSrc = data.audio_src_url;
         console.log(audioSrc);
 
         var audio = document.getElementById('audio');
         audio.src = audioSrc;
 
+        audio.classList.add("showing");
         audio.play();
 
         askButton.textContent = "Ask";
