@@ -130,15 +130,16 @@ def index(request):
     return render(request, "index.html")
 
 def ask(request):
-    question = request.POST.get("question", "")
+    question_asked = request.POST.get("question", "")
 
-    previous_question = Question.objects.filter(question=question).first()
-    previous_answer = previous_question.answer if previous_question else None
+    previous_question = Question.objects.filter(question=question_asked).first()
+    audio_src_url = previous_question and previous_question.audio_src_url if previous_question else None
 
-    if previous_answer:
+    if audio_src_url:
+        print("previously asked and answered: " + previous_question.answer + " ( " + previous_question.audio_src_url + ")")
         previous_question.ask_count = previous_question.ask_count + 1
         previous_question.save()
-        return render(request, "answer.html", { "answer": previous_answer, "question": question, "audio_src_url": previous_question.audio_src_url })
+        return JsonResponse({ "question": previous_question.question, "audio_src_url": audio_src_url })
 
     s3 = boto3.client(
         's3',
@@ -154,11 +155,8 @@ def ask(request):
 
     document_embeddings = load_embeddings('embeddings.csv')
 
-    answer = answer_query_with_context(question, df, document_embeddings)
+    answer = answer_query_with_context(question_asked, df, document_embeddings)
     print(answer)
-
-    question = Question(question=question, answer=answer)
-    question.save()
 
     project_uuid = '6314e4df'
     voice_uuid = '0eb3a3f1'
@@ -177,12 +175,16 @@ def ask(request):
         raw=None
     )
 
-    question.audio_src_url = response['item']['audio_src']
+    question = Question(question=question_asked, answer=answer, audio_src_url=response['item']['audio_src'])
     question.save()
 
-    return render(request, "answer.html", { "answer": answer, "question": question.question, "audio_src_url": question.audio_src_url })
+    return JsonResponse({ "question": question.question, "audio_src_url": question.audio_src_url })
 
 def db(request):
     questions = Question.objects.all().order_by('-ask_count')
 
     return render(request, "db.html", { "questions": questions })
+
+def question(request, id):
+    question = Question.objects.get(pk=id)
+    return render(request, "answer.html", { "question": question.question, "audio_src_url": question.audio_src_url })
