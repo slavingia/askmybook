@@ -30,6 +30,8 @@ else:
 if not IS_HEROKU or True:
     DEBUG = True
 
+CSRF_TRUSTED_ORIGINS = ["https://www.askmybook.com", "127.0.0.1"]
+
 # Application definition
 
 INSTALLED_APPS = [
