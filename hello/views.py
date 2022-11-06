@@ -13,6 +13,9 @@ from resemble import Resemble
 
 import boto3
 
+import mimetypes
+import json
+
 Resemble.api_key('0vWhLtB2fmjVIE0Nuzic5wtt')
 openai.api_key = "sk-DOiDZHHE1f1tvxnO5zs103vHelanA6BVBVO44cN7"
 DEEPGRAM_API_KEY = "b4a5ce14299719a271113fe23bf9316a41ea8119"
@@ -240,3 +243,16 @@ def delete_question(request):
 def question(request, id):
     question = Question.objects.get(pk=id)
     return render(request, "answer.html", { "question": question.question, "audio_src_url": question.audio_src_url })
+
+def metadata(request):
+    filename = "metadata.jsonl"
+    data = ""
+
+    for question in Question.objects.all().order_by('-ask_count'):
+        if not question.real_answer:
+            continue
+        data = data + "{ \"prompt\": \"" + question.question + "\", \"completion\": \"" + question.real_answer + "\" }\n"
+
+    response = HttpResponse(data, content_type="application/jsonl")
+    response['Content-Disposition'] = "attachment; filename=%s" % filename
+    return response

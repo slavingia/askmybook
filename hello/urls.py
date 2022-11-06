@@ -21,5 +21,6 @@ urlpatterns = [
     path("db/", hello.views.db, name="db"),
     path("real_answer", hello.views.real_answer, name="real_answer"),
     path("delete_question", hello.views.delete_question, name="delete_question"),
+    path("metadata.jsonl", hello.views.metadata, name="metadata"),
     path("admin/", admin.site.urls),
 ]
