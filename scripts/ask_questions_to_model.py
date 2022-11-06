@@ -8,7 +8,7 @@ import boto3
 
 openai.api_key = "sk-DOiDZHHE1f1tvxnO5zs103vHelanA6BVBVO44cN7"
 
-COMPLETIONS_MODEL = "text-davinci-002"
+COMPLETIONS_MODEL = "curie:ft-personal-2022-11-06-17-24-31" # "text-davinci-002"
 
 s3 = boto3.client(
     's3',
