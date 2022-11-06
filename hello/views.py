@@ -14,6 +14,7 @@ import boto3
 
 Resemble.api_key('0vWhLtB2fmjVIE0Nuzic5wtt')
 openai.api_key = "sk-DOiDZHHE1f1tvxnO5zs103vHelanA6BVBVO44cN7"
+DEEPGRAM_API_KEY = "b4a5ce14299719a271113fe23bf9316a41ea8119"
 
 COMPLETIONS_MODEL = "text-davinci-002"
 
@@ -133,6 +134,9 @@ def index(request):
 @csrf_exempt
 def ask(request):
     question_asked = request.POST.get("question", "")
+
+    if not question_asked.endswith('?'):
+        question_asked += '?'
 
     previous_question = Question.objects.filter(question=question_asked).first()
     audio_src_url = previous_question and previous_question.audio_src_url if previous_question else None
