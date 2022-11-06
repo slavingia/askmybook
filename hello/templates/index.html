@@ -4,8 +4,8 @@
 {% block content %}
 
 <h1>
-  Ask me anything
-  <small>(about The Minimalist Entrepreneur)</small>
+  AMA about my book, <br/>
+  <a href="https://www.amazon.com/Minimalist-Entrepreneur-Great-Founders-More/dp/0593192397">The Minimalist Entrepreneur</a>:
 </h1>
 
 <form action="/ask" method="post">
@@ -20,6 +20,10 @@
 
 <script>
   $(document).ready(function() {
+    $("textarea").click(function(e) {
+      $(this).val("");
+    });
+
     $("form").submit(function(e) {
       if (document.getElementById("question").value == "") {
         alert("Please ask a question!");
