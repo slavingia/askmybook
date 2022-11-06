@@ -19,5 +19,7 @@ urlpatterns = [
     path("ask", hello.views.ask, name="ask"),
     path("question/<int:id>", hello.views.question, name="question"),
     path("db/", hello.views.db, name="db"),
+    path("real_answer", hello.views.real_answer, name="real_answer"),
+    path("delete_question", hello.views.delete_question, name="delete_question"),
     path("admin/", admin.site.urls),
 ]

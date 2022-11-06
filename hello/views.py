@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import redirect
 
 from .models import Question
 
@@ -200,6 +201,41 @@ def db(request):
     questions = Question.objects.all().order_by('-ask_count')
 
     return render(request, "db.html", { "questions": questions })
+
+def real_answer(request):
+    id = request.POST.get("id", "")
+    answer = request.POST.get("answer", "")
+
+    question = Question.objects.get(pk=id)
+    question.real_answer = answer
+
+    project_uuid = '6314e4df'
+    voice_uuid = '0eb3a3f1'
+
+    response = Resemble.v2.clips.create_sync(
+        project_uuid,
+        voice_uuid,
+        answer,
+        title=None,
+        sample_rate=None,
+        output_format=None,
+        precision=None,
+        include_timestamps=None,
+        is_public=None,
+        is_archived=None,
+        raw=None
+    )
+
+    question.audio_src_url = response['item']['audio_src']
+    question.save()
+
+    return JsonResponse({ "question": question.question, "answer": question.real_answer })
+
+def delete_question(request):
+    id = request.POST.get("id", "")
+    Question.objects.get(pk=id).delete()
+
+    return redirect("/db/")
 
 def question(request, id):
     question = Question.objects.get(pk=id)
