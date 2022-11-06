@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import Question
 
@@ -129,6 +130,7 @@ def answer_query_with_context(
 def index(request):
     return render(request, "index.html")
 
+@csrf_exempt
 def ask(request):
     question_asked = request.POST.get("question", "")
 
