@@ -103,8 +103,7 @@ def construct_prompt(question: str, context_embeddings: dict, df: pd.DataFrame) 
         chosen_sections.append(SEPARATOR + document_section.content)
         chosen_sections_indexes.append(str(section_index))
 
-    header = """Answer the question as truthfully as possible using the provided context, and if the answer is not contained within the text below, say "I don't know."\n\nContext:\n"""
-    header = """Context:\n"""
+    header = """Sahil Lavingia is the founder and CEO of Gumroad, a company he has been running since 2011. In 2021, he published a book titled The Minimalist Entrepreneur. He is often asked questions about it from aspiring entrepreneurs and business owners. Answer the question as best as you can using the provided context from this book about entrepreneurship, and if the answer is not contained within the provided context, do your best to extrapolate the answer from other intelligent technology leaders and thinkers. Answer from the perspective of Sahil Lavingia. Please keep your answers to three sentences maximum, and speak in complete sentences.\n\nContext:\n"""
 
     return header + "".join(chosen_sections) + "\n\n Q: " + question + "\n A:"
 

@@ -16,6 +16,6 @@ This application supports the [Getting Started with Python on Heroku](https://de
 
 - `python pdf_to_pages_content.py` to turn local PDF into structured page content
 - `python content_to_embeddings.py` to turn structured page content into embeddings
-- `python ask_questions.py` to ask GPT-3 questions using embeddings
+- `python ask_questions_to_model.py` to ask GPT-3 questions using embeddings
 
 Upload these files to S3 and update the URLs.
