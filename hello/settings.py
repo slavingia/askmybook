@@ -27,10 +27,10 @@ else:
     ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if not IS_HEROKU or True:
+if not IS_HEROKU:
     DEBUG = True
 
-CSRF_TRUSTED_ORIGINS = ["https://www.askmybook.com", "127.0.0.1"]
+CSRF_TRUSTED_ORIGINS = ["https://www.askmybook.com", "http://127.0.0.1"]
 
 # Application definition
 

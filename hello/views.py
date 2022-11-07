@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
 
 from .models import Question
 
@@ -200,6 +201,7 @@ def ask(request):
 
     return JsonResponse({ "question": question.question, "audio_src_url": question.audio_src_url })
 
+@login_required
 def db(request):
     questions = Question.objects.all().order_by('-ask_count')
 
