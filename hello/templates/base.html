@@ -24,13 +24,25 @@
         line-height: 1.75;
       }
 
+      .header {
+        text-align: center;
+      }
+
+      h1 {
+        margin-bottom: 0;
+      }
+
+      h1 + p {
+        margin-top: 0;
+      }
+
       textarea,
       button {
         box-sizing: border-box;
         width: 100%;
         border: 1px solid black;
         border-radius: 20px;
-        font-size: 2rem;
+        font-size: 1rem;
         padding: 10px 30px;
       }
 
@@ -50,10 +62,6 @@
         opacity: 0.5;
       }
 
-      h1 small {
-        display: block;
-      }
-
       p {
         display: block;
       }
@@ -63,10 +71,8 @@
       }
 
       audio {
-        margin: 2rem auto 1rem;
         display: block;
         width: 100%;
-        opacity: 0;
       }
 
       audio.showing {
@@ -74,7 +80,7 @@
       }
 
       .main {
-        margin-top: 20vh;
+        margin-top: 2rem;
       }
 
       form.small textarea,
@@ -103,6 +109,52 @@
       ul li:last-of-type {
         border-bottom: 0;
       }
+
+      img {
+        max-width: 320px;
+        max-height: 480px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+        border-radius: 10px;
+      }
+
+      .main {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      .left,
+      .right {
+        display: flex;
+        flex-direction: column;
+        flex-basis: 100%;
+        flex: 1;
+      }
+
+      h2 {
+        margin-top: 0;
+      }
+
+      .credits {
+        display: block;
+        margin-top: 2rem;
+        color: #aaa;
+      }
+
+      @media only screen and (max-width: 900px) {
+        .main {
+          display: block;
+          margin-top: 1rem;
+        }
+
+        img {
+          max-width: auto;
+          max-height: auto;
+          width: 100%;
+        }
+
+        .right { margin-top: 2rem; }
+      }
   </style>
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XSYZ5MWD1H"></script>
@@ -116,9 +168,7 @@
 </head>
 <body>
 
-<div class="main">
-  {% block content %}{% endblock %}
-</div>
+{% block content %}{% endblock %}
 
 </body>
 </html>

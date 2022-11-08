@@ -3,20 +3,39 @@
 
 {% block content %}
 
-<h1>
-  Ask me anything about my book, <br/>
-  <a href="https://www.amazon.com/Minimalist-Entrepreneur-Great-Founders-More/dp/0593192397">The Minimalist Entrepreneur</a>:
-</h1>
+<div class="header">
+  <h1>Ask My Book</h1>
+  <p style="color: #999;">Ask questions and get answers in real-time, powered by AI</p>
+</div>
 
-<form action="/ask" method="post">
-  {% csrf_token %}
-  <textarea autofocus="autofocus" name="question" id="question">What is a minimalist entrepreneur?</textarea>
-  <button type="submit" id="button">Ask</button>
-</form>
+<div class="main">
+  <div class="left">
+    <h2>
+      1. This is my book
+    </h2>
+    <a href="https://www.amazon.com/Minimalist-Entrepreneur-Great-Founders-More/dp/0593192397">
+      <img src="{% static 'book.png' %}" />
+    </a>
+  </div>
+  <div class="right">
+    <h2>
+      2. Ask it a question
+    </h2>
+    <form action="/ask" method="post">
+      {% csrf_token %}
+      <textarea autofocus="autofocus" name="question" id="question">What is a minimalist entrepreneur?</textarea>
+      <button type="submit" id="button">Ask</button>
+    </form>
 
-<audio id="audio" controls autoplay>
-  <source src="" type="audio/wav">
-</audio>
+    <h2 style="margin-top: 2rem;">3. Get an answer:</h2>
+
+    <audio id="audio" controls autoplay>
+      <source src="" type="audio/wav">
+    </audio>
+
+    <p class="credits">Built by <a href="https://twitter.com/shl">Sahil Lavingia</a></p>
+  </div>
+</div>
 
 <script>
   $(document).ready(function() {
