@@ -23,7 +23,7 @@
     </h2>
     <form action="/ask" method="post">
       {% csrf_token %}
-      <textarea autofocus="autofocus" name="question" id="question">What is a minimalist entrepreneur?</textarea>
+      <textarea autofocus="autofocus" name="question" id="question">{{ default_question }}</textarea>
       <button type="submit" id="button">Ask</button>
     </form>
 

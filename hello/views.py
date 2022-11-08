@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
+import random
 
 from .models import Question
 
@@ -144,7 +145,14 @@ def answer_query_with_context(
     return response["choices"][0]["text"].strip(" \n")
 
 def index(request):
-    return render(request, "index.html")
+    questions = [
+        "What is a minimalist entrepreneur?",
+        "What is your definition of community?",
+        "How do I decide what kind of business I should start?",
+        "Who is your favorite entrepreneur?",
+    ]
+
+    return render(request, "index.html", { "default_question": random.choice(questions) })
 
 @csrf_exempt
 def ask(request):
