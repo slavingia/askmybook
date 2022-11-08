@@ -62,7 +62,6 @@
         encode: true
       }).done(function(data) {
         let audioSrc = data.audio_src_url;
-        console.log(audioSrc);
 
         var audio = document.getElementById('audio');
         audio.src = audioSrc;
@@ -72,6 +71,10 @@
 
         askButton.textContent = "Ask";
         askButton.disabled = false;
+      });
+
+      $('#audio').on('ended', function() {
+        $("textarea").focus().select();
       });
 
       e.preventDefault();
