@@ -31,32 +31,70 @@
       }
 
       .header {
+        margin-top: 20vh;
         text-align: center;
       }
 
-      h1 {
+      .hidden {
+        opacity: 0;
+        display: none;
+      }
+
+      .showing {
+        display: block;
+        opacity: 1;
+      }
+
+      .logo {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+      }
+
+      .logo h1 {
+        font-weight: bold;
         margin-bottom: 0;
+        text-align: left;
+        font-size: 19px;
+        font-weight: normal;
+        line-height: 32px;
+        float: left;
+      }
+
+      .logo img {
+        height: 84px;
+        margin: 1rem 0 0 1rem;
       }
 
       h1 + p {
         margin-top: 0;
       }
 
+      .main {
+        margin: 2rem auto;
+        max-width: 600px;
+      }
+
+      select,
       textarea,
-      button {
+      button,
+      .button {
         box-sizing: border-box;
         width: 100%;
         border: 1px solid black;
-        border-radius: 20px;
-        font-size: 1rem;
-        padding: 10px 30px;
+        border-radius: 10px;
+        font-size: 18px;
+        padding: 8px 12px;
       }
 
-      button {
-        display: block;
+      button,
+      .button {
+        display: inline-block;
         color: white;
         background: black;
         margin-top: 1rem;
+        width: auto;
+        padding: 8px 18px;
       }
 
       button:hover {
@@ -66,6 +104,12 @@
       button:disabled {
         cursor: not-allowed;
         opacity: 0.5;
+      }
+
+      .buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
       }
 
       p {
@@ -79,40 +123,24 @@
       audio {
         display: block;
         width: 100%;
-      }
-
-      audio.showing {
-        opacity: 1;
-      }
-
-      .main {
-        margin-top: 2rem;
-      }
-
-      form.small textarea,
-      form.small button {
-        font-size: 1rem;
+        display: none;
       }
 
       form.small textarea {
         min-height: 10rem;
       }
 
-      .hidden {
-        display: none !important;
-      }
-
-      ul {
+      ul.queue {
         padding: 0;
       }
 
-      ul li {
+      ul.queue li {
         list-style: none;
         border-bottom: 1px solid black;
         padding: 2rem 0;
       }
 
-      ul li:last-of-type {
+      ul.queue li:last-of-type {
         border-bottom: 0;
       }
 
@@ -121,20 +149,6 @@
         max-height: 480px;
         box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
         border-radius: 10px;
-      }
-
-      .main {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-      }
-
-      .left,
-      .right {
-        display: flex;
-        flex-direction: column;
-        flex-basis: 100%;
-        flex: 1;
       }
 
       h2 {
@@ -147,10 +161,22 @@
         color: #aaa;
       }
 
+      .questions {
+        padding: 0;
+      }
+
+      .questions li {
+        background: #eee;
+        border-radius: 10px;
+        padding: 4px 8px;
+        margin: 10px 10px 0 0;
+        display: block;
+      }
+
       @media only screen and (max-width: 900px) {
         .main {
           display: block;
-          margin-top: 1rem;
+          margin: 1rem;
         }
 
         img {
@@ -158,13 +184,11 @@
           max-height: auto;
           width: 100%;
         }
+      }
 
-        .left a {
-          display: flex;
-          justify-content: center;
-        }
-
-        .right { margin-top: 2rem; }
+      footer {
+        justify-content: center;
+        text-align: center;
       }
   </style>
 
@@ -180,6 +204,10 @@
 <body>
 
 {% block content %}{% endblock %}
+
+<footer>
+  <p class="credits">Built by <a href="https://twitter.com/shl">Sahil Lavingia</a>, powered by AI</p>
+</footer>
 
 </body>
 </html>

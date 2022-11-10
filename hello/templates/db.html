@@ -3,9 +3,9 @@
 
 {% block content %}
 
-<h2>Questions</h2>
+<h2>{{ answered_questions_count }}/500 questions answered</h2>
 
-<ul>
+<ul class="queue">
   {% for question in questions %}
       <li>
         <strong>{{ question.question }}</strong>

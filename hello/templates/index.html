@@ -4,45 +4,69 @@
 {% block content %}
 
 <div class="header">
-  <h1>Ask My Book</h1>
-  <p style="color: #999;">Ask questions and get answers in real-time, powered by AI</p>
-</div>
-
-<div class="main">
-  <div class="left">
-    <h2>
-      1. This is my book:
-    </h2>
+  <div class="logo">
+    <h1>Ask<br />My<br />Book:</h1>
     <a href="https://www.amazon.com/Minimalist-Entrepreneur-Great-Founders-More/dp/0593192397">
       <img src="{% static 'book.png' %}" loading="lazy" />
     </a>
   </div>
-  <div class="right">
-    <h2>
-      2. Ask it a question:
-    </h2>
-    <form action="/ask" method="post">
-      {% csrf_token %}
-      <textarea autofocus="autofocus" name="question" id="question">{{ default_question }}</textarea>
-      <button type="submit" id="button">Ask</button>
-    </form>
+  <div class="clear" style="overflow: hidden;"></div>
+</div>
 
-    <h2 style="margin-top: 2rem;">3. Get an answer:</h2>
+<div class="main">
+  <form action="/ask" method="post">
+    {% csrf_token %}
+    <textarea autofocus="autofocus" name="question" id="question">What is Ask My Book?</textarea>
 
-    <audio id="audio" controls autoplay>
-      <source src="" type="audio/wav">
-    </audio>
+    <div class="buttons">
+      <button type="submit" id="ask-button">Ask question</button>
+      <button id="lucky-button" style="background: #eee; border-color: #eee; color: #444;" data>I'm feeling lucky</button>
+    </div>
+  </form>
 
-    <p class="credits">Built by <a href="https://twitter.com/shl">Sahil Lavingia</a></p>
-  </div>
+  <p id="answer-container" class="hidden"><strong>Answer:</strong> <span id="answer"></span> <button id="ask-another-button" style="display: none;">Ask another question</button></p>
+
+  <div id="msg"/>
+
+  <audio id="audio" controls autoplay>
+    <source src="" type="audio/wav">
+  </audio>
 </div>
 
 <script>
   $(document).ready(function() {
     $("textarea").select();
 
+    function randomInteger(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    var showText = function (target, message, index) {
+      if (index < message.length) {
+        var interval = randomInteger(30, 70);
+        $(target).append(message[index++]);
+        setTimeout(function () { showText(target, message, index); }, interval);
+      } else {
+        $("#ask-another-button").css("display", "block");
+      }
+    }
+
     $("textarea").click(function(e) {
       $(this).select();
+    });
+
+    $("#lucky-button").click(function(e) {
+      var options = ["What is a minimalist entrepreneur?", "What is your definition of community?", "How do I decide what kind of business I should start?"],
+          random = ~~(Math.random() * options.length);
+
+      $("textarea").val(options[random]);
+    });
+
+    $("#ask-another-button").click(function(e) {
+      $(".buttons").show();
+      document.getElementById('answer-container').classList.remove("showing");
+      $("#ask-another-button").css("display", "none");
+      $("textarea").select();
     });
 
     $("form").submit(function(e) {
@@ -52,7 +76,7 @@
         return false;
       }
 
-      let askButton = document.getElementById("button");
+      let askButton = document.getElementById("ask-button");
       askButton.textContent = "Asking...";
       askButton.disabled = true;
 
@@ -63,20 +87,21 @@
         datatype: "json",
         encode: true
       }).done(function(data) {
-        let audioSrc = data.audio_src_url;
+        $(".buttons").hide();
 
         var audio = document.getElementById('audio');
-        audio.src = audioSrc;
+        audio.src = data.audio_src_url;
 
-        audio.classList.add("showing");
+        var answer = document.getElementById('answer');
+        answer.innerHTML = "";
+        document.getElementById('answer-container').classList.add("showing");
+
+        showText("#answer", data.answer, 0, 50);
+
         audio.play();
 
-        askButton.textContent = "Ask";
+        askButton.textContent = "Ask question";
         askButton.disabled = false;
-      });
-
-      $('#audio').on('ended', function() {
-        $("textarea").focus().select();
       });
 
       e.preventDefault();

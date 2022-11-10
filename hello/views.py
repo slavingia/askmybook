@@ -168,7 +168,7 @@ def ask(request):
         print("previously asked and answered: " + previous_question.answer + " ( " + previous_question.audio_src_url + ")")
         previous_question.ask_count = previous_question.ask_count + 1
         previous_question.save()
-        return JsonResponse({ "question": previous_question.question, "audio_src_url": audio_src_url })
+        return JsonResponse({ "question": previous_question.question, "answer": previous_question.answer if not previous_question.real_answer else previous_question.real_answer, "audio_src_url": audio_src_url })
 
     s3 = boto3.client(
         's3',
@@ -207,13 +207,14 @@ def ask(request):
     question = Question(question=question_asked, answer=answer, audio_src_url=response['item']['audio_src'])
     question.save()
 
-    return JsonResponse({ "question": question.question, "audio_src_url": question.audio_src_url })
+    return JsonResponse({ "question": question.question, "answer": answer, "audio_src_url": question.audio_src_url })
 
 @login_required
 def db(request):
-    questions = Question.objects.all().order_by('-ask_count')
+    answered_questions_count = Question.objects.all().exclude(real_answer__isnull=True).count()
+    questions = Question.objects.all().exclude(real_answer__isnull=False).order_by('-ask_count')
 
-    return render(request, "db.html", { "questions": questions })
+    return render(request, "db.html", { "questions": questions, "answered_questions_count": answered_questions_count })
 
 def real_answer(request):
     id = request.POST.get("id", "")
@@ -252,7 +253,7 @@ def delete_question(request):
 
 def question(request, id):
     question = Question.objects.get(pk=id)
-    return render(request, "answer.html", { "question": question.question, "audio_src_url": question.audio_src_url })
+    return render(request, "answer.html", { "question": question.question, "answer": question.answer if not question.real_answer else question.real_answer, "audio_src_url": question.audio_src_url })
 
 def metadata(request):
     filename = "metadata.jsonl"
@@ -261,7 +262,7 @@ def metadata(request):
     for question in Question.objects.all().order_by('-ask_count'):
         if not question.real_answer:
             continue
-        data = data + "{ \"prompt\": \"" + question.question + "\", \"completion\": \" " + question.real_answer + "\" }\n"
+        data = data + "{ \"prompt\": \"" + question.question + "\", \"completion\": \" " + question.answer if not question.real_answer else question.real_answer + "\" }\n"
 
     response = HttpResponse(data, content_type="application/jsonl")
     response['Content-Disposition'] = "attachment; filename=%s" % filename

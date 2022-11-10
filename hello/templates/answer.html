@@ -3,22 +3,30 @@
 
 {% block content %}
 
-<h1>You asked:</h1>
+<div class="header">
+  <div class="logo">
+    <h1>Ask<br />My<br />Book:</h1>
+    <a href="https://www.amazon.com/Minimalist-Entrepreneur-Great-Founders-More/dp/0593192397">
+      <img src="{% static 'book.png' %}" loading="lazy" />
+    </a>
+  </div>
+  <div class="clear" style="overflow: hidden;"></div>
+</div>
 
-<form action="/" method="get">
-  <textarea name="question" disabled="disabled">{{ question }}</textarea>
-</form>
+<div class="main">
+  <form action="/" method="get">
+    <textarea name="question" disabled="disabled">{{ question }}</textarea>
+  </form>
 
-<h1>
-  Answer:
-</h1>
+  <p><strong>Answer: </strong><span id="answer">{{ answer }}</span></p>
 
-{% if audio_src_url %}
-  <audio controls autoplay class="showing">
-    <source src="{{ audio_src_url }}" type="audio/wav">
-  </audio>
-{% endif %}
+  <p><a href="/">Ask another question?</a></p>
 
-<a href="/">Ask another question</a>
+  {% if audio_src_url %}
+    <audio id="audio" controls autoplay>
+      <source src="{{ audio_src_url }}" type="audio/wav">
+    </audio>
+  {% endif %}
+</div>
 
 {% endblock %}
