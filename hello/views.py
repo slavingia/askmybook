@@ -249,7 +249,7 @@ def delete_question(request):
     id = request.POST.get("id", "")
     Question.objects.get(pk=id).delete()
 
-    return redirect("/db/")
+    return redirect("/queue")
 
 def question(request, id):
     question = Question.objects.get(pk=id)
