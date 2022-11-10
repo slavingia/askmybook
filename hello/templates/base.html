@@ -31,7 +31,7 @@
       }
 
       .header {
-        margin-top: 20vh;
+        margin-top: 10vh;
         text-align: center;
       }
 
@@ -54,12 +54,12 @@
       .logo h1 {
         font-weight: bold;
         margin-bottom: 0;
-        font-size: 19px;
-        line-height: 32px;
+        font-size: 24px;
+        line-height: 36px;
       }
 
       .logo img {
-        height: 128px;
+        height: 200px;
       }
 
       h1 + p {
@@ -172,21 +172,12 @@
         display: block;
       }
 
-      @media only screen and (max-width: 900px) {
-        .main {
-          display: block;
-          margin: 1rem;
-        }
-
-        img {
-          max-width: auto;
-          max-height: auto;
-          width: 100%;
-        }
-      }
-
       footer {
-        justify-content: center;
+        width: 100%;
+        position: absolute;
+        bottom: 1rem;
+        left: 0;
+        right: 0;
         text-align: center;
       }
   </style>
@@ -205,7 +196,6 @@
 {% block content %}{% endblock %}
 
 <footer>
-  <p class="credits">#</p>
   <p class="credits">Project by <a href="https://twitter.com/shl">Sahil Lavingia</a></p>
 </footer>
 
