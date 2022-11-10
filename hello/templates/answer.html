@@ -18,9 +18,7 @@
     <textarea name="question" disabled="disabled">{{ question }}</textarea>
   </form>
 
-  <p><strong>Answer: </strong><span id="answer">{{ answer }}</span></p>
-
-  <p><a href="/">Ask another question?</a></p>
+  <p><strong>Answer: </strong><span id="answer">{{ answer }}</span> <button id="ask-another-button" style="display: none;">Ask another question</button></p>
 
   {% if audio_src_url %}
     <audio id="audio" controls autoplay>
@@ -28,5 +26,31 @@
     </audio>
   {% endif %}
 </div>
+
+<script>
+  $(document).ready(function() {
+    function randomInteger(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    var showText = function (target, message, index) {
+      if (index < message.length) {
+        var interval = randomInteger(30, 70);
+        $(target).append(message[index++]);
+        setTimeout(function () { showText(target, message, index); }, interval);
+      } else {
+        $("#ask-another-button").css("display", "block");
+      }
+    }
+
+    $("#ask-another-button").click(function(e) {
+      window.location.replace("/");
+    });
+
+    var answer = document.getElementById('answer').innerHTML;
+    $("#answer").empty();
+    showText("#answer", answer, 0, 50);
+  });
+</script>
 
 {% endblock %}
