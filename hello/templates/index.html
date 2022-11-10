@@ -5,18 +5,20 @@
 
 <div class="header">
   <div class="logo">
-    <h1>Ask<br />My<br />Book:</h1>
     <a href="https://www.amazon.com/Minimalist-Entrepreneur-Great-Founders-More/dp/0593192397">
       <img src="{% static 'book.png' %}" loading="lazy" />
     </a>
+    <h1>Ask My Book</h1>
   </div>
   <div class="clear" style="overflow: hidden;"></div>
 </div>
 
 <div class="main">
+  <p class="credits">This is an experiment in using AI to make my book's content more accessible. Ask a question and I'll do my best to answer it:</p>
+
   <form action="/ask" method="post">
     {% csrf_token %}
-    <textarea autofocus="autofocus" name="question" id="question">What is Ask My Book?</textarea>
+    <textarea autofocus="autofocus" name="question" id="question">What is The Minimalist Entrepreneur about?</textarea>
 
     <div class="buttons">
       <button type="submit" id="ask-button">Ask question</button>

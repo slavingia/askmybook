@@ -47,23 +47,19 @@
 
       .logo {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: center;
       }
 
       .logo h1 {
         font-weight: bold;
         margin-bottom: 0;
-        text-align: left;
         font-size: 19px;
-        font-weight: normal;
         line-height: 32px;
-        float: left;
       }
 
       .logo img {
-        height: 84px;
-        margin: 1rem 0 0 1rem;
+        height: 128px;
       }
 
       h1 + p {
@@ -71,7 +67,7 @@
       }
 
       .main {
-        margin: 2rem auto;
+        margin: 1rem auto;
         max-width: 600px;
       }
 
@@ -157,8 +153,11 @@
 
       .credits {
         display: block;
+        color: #777;
+      }
+
+      footer {
         margin-top: 2rem;
-        color: #aaa;
       }
 
       .questions {
@@ -206,7 +205,8 @@
 {% block content %}{% endblock %}
 
 <footer>
-  <p class="credits">Built by <a href="https://twitter.com/shl">Sahil Lavingia</a>, powered by AI</p>
+  <p class="credits">#</p>
+  <p class="credits">Project by <a href="https://twitter.com/shl">Sahil Lavingia</a></p>
 </footer>
 
 </body>
