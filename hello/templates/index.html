@@ -28,7 +28,7 @@
 
   {% if answer %}
     <p id="answer-container" class="hidden showing"><strong>Answer:</strong> <span id="answer">{{ answer }}</span> <button id="ask-another-button" style="display: block;">Ask another question</button></p>
-  {{ else }}
+  {% else %}
     <p id="answer-container" class="hidden"><strong>Answer:</strong> <span id="answer"></span> <button id="ask-another-button" style="display: none;">Ask another question</button></p>
 
     <script>
