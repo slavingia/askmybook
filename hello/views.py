@@ -145,14 +145,7 @@ def answer_query_with_context(
     return response["choices"][0]["text"].strip(" \n")
 
 def index(request):
-    questions = [
-        "What is a minimalist entrepreneur?",
-        "What is your definition of community?",
-        "How do I decide what kind of business I should start?",
-        "Who is your favorite entrepreneur?",
-    ]
-
-    return render(request, "index.html", { "default_question": random.choice(questions) })
+    return render(request, "index.html", { "default_question": "What is The Minimalist Entrepreneur about?" })
 
 @csrf_exempt
 def ask(request):
@@ -168,7 +161,7 @@ def ask(request):
         print("previously asked and answered: " + previous_question.answer + " ( " + previous_question.audio_src_url + ")")
         previous_question.ask_count = previous_question.ask_count + 1
         previous_question.save()
-        return JsonResponse({ "question": previous_question.question, "answer": previous_question.answer if not previous_question.real_answer else previous_question.real_answer, "audio_src_url": audio_src_url })
+        return JsonResponse({ "question": previous_question.question, "answer": previous_question.answer if not previous_question.real_answer else previous_question.real_answer, "audio_src_url": audio_src_url, "id": previous_question.pk })
 
     s3 = boto3.client(
         's3',
@@ -207,7 +200,7 @@ def ask(request):
     question = Question(question=question_asked, answer=answer, audio_src_url=response['item']['audio_src'])
     question.save()
 
-    return JsonResponse({ "question": question.question, "answer": answer, "audio_src_url": question.audio_src_url })
+    return JsonResponse({ "question": question.question, "answer": answer, "audio_src_url": question.audio_src_url, "id": question.pk })
 
 @login_required
 def db(request):
@@ -253,7 +246,7 @@ def delete_question(request):
 
 def question(request, id):
     question = Question.objects.get(pk=id)
-    return render(request, "answer.html", { "question": question.question, "answer": question.answer if not question.real_answer else question.real_answer, "audio_src_url": question.audio_src_url })
+    return render(request, "index.html", { "default_question": question.question, "answer": question.answer if not question.real_answer else question.real_answer, "audio_src_url": question.audio_src_url })
 
 def metadata(request):
     filename = "metadata.jsonl"
