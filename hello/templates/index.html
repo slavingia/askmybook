@@ -18,7 +18,7 @@
 
   <form action="/ask" method="post">
     {% csrf_token %}
-    <textarea autofocus="autofocus" name="question" id="question">{{ default_question }}</textarea>
+    <textarea name="question" id="question">{{ default_question }}</textarea>
 
     <div class="buttons" {% if answer %}style="display: none"{% endif %}>
       <button type="submit" id="ask-button">Ask question</button>
