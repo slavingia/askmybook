@@ -103,7 +103,9 @@
         answer.innerHTML = "";
         document.getElementById('answer-container').classList.add("showing");
 
-        showText("#answer", data.answer, 0, 50);
+        setTimeout(function() {
+          showText("#answer", data.answer, 0);
+        }, 1500);
 
         audio.play();
 
