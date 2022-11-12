@@ -58,10 +58,6 @@
       }
     }
 
-    $("textarea").click(function(e) {
-      $(this).select();
-    });
-
     $("#lucky-button").click(function(e) {
       var options = ["What is a minimalist entrepreneur?", "What is your definition of community?", "How do I decide what kind of business I should start?"],
           random = ~~(Math.random() * options.length);
