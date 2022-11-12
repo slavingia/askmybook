@@ -255,7 +255,7 @@ def metadata(request):
     for question in Question.objects.all().order_by('-ask_count'):
         # if not question.real_answer:
         #     continue
-        data = data + "{ \"prompt\": \"" + question.question + "\", \"completion\": \" " + question.answer if not question.real_answer else question.real_answer + "\" }\n"
+        data = data + json.dumps({"prompt": question.question, "completion": question.answer if not question.real_answer else question.real_answer }) + "\n"
 
     response = HttpResponse(data, content_type="application/jsonl")
     response['Content-Disposition'] = "attachment; filename=%s" % filename
