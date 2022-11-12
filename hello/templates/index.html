@@ -63,6 +63,7 @@
     $("textarea").bind('input propertychange', function(e) {
       $(".buttons").show();
       document.getElementById('answer-container').classList.remove("showing");
+      clearTimeout(window.answerShower);
       document.getElementById('audio').pause();
       $("#ask-another-button").css("display", "none");
     });
@@ -70,6 +71,7 @@
     $("#ask-another-button").click(function(e) {
       $(".buttons").show();
       document.getElementById('answer-container').classList.remove("showing");
+      clearTimeout(window.answerShower);
       document.getElementById('audio').pause();
       $("#ask-another-button").css("display", "none");
       $("textarea").select();
@@ -102,9 +104,9 @@
         answer.innerHTML = "";
         document.getElementById('answer-container').classList.add("showing");
 
-        setTimeout(function() {
+        window.answerShower = setTimeout(function() {
           showText("#answer", data.answer, 0);
-        }, 1500);
+        }, 1200);
 
         audio.volume = 0.5;
         audio.play();

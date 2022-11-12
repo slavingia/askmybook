@@ -15,12 +15,12 @@ from resemble import Resemble
 
 import boto3
 
-import mimetypes
 import json
 
-Resemble.api_key('0vWhLtB2fmjVIE0Nuzic5wtt')
-openai.api_key = "sk-DOiDZHHE1f1tvxnO5zs103vHelanA6BVBVO44cN7"
-DEEPGRAM_API_KEY = "b4a5ce14299719a271113fe23bf9316a41ea8119"
+import os
+
+Resemble.api_key(os.environ["RESEMBLE_API_KEY"])
+openai.api_key = os.environ["OPENAI_API_KEY"]
 
 COMPLETIONS_MODEL = "text-davinci-002"
 
@@ -89,7 +89,7 @@ def load_embeddings(fname: str) -> dict[tuple[str, str], list[float]]:
            (r.title): [r[str(i)] for i in range(max_dim + 1)] for _, r in df.iterrows()
     }
 
-def construct_prompt(question: str, context_embeddings: dict, df: pd.DataFrame) -> str:
+def construct_prompt(question: str, context_embeddings: dict, df: pd.DataFrame) -> tuple[str, str]:
     """
     Fetch relevant
     """
@@ -122,14 +122,14 @@ def construct_prompt(question: str, context_embeddings: dict, df: pd.DataFrame) 
     question_9 = "\n\n\nQ: What is the best way to distribute surveys to test my product idea\n\nA: I use Google Forms and my email list / Twitter account. Works great and is 100% free."
     question_10 = "\n\n\nQ: How do you know, when to quit\n\nA: When I'm bored, no longer learning, not earning enough, getting physically unhealthy, etc… loads of reasons. I think the default should be to “quit” and work on something new. Few things are worth holding your attention for a long period of time."
 
-    return header + "".join(chosen_sections) + question_1 + question_2 + question_3 + question_4 + question_5 + question_6 + question_7 + question_8 + question_9 + question_10 + "\n\n\nQ: " + question + "\n\nA: "
+    return (header + "".join(chosen_sections) + question_1 + question_2 + question_3 + question_4 + question_5 + question_6 + question_7 + question_8 + question_9 + question_10 + "\n\n\nQ: " + question + "\n\nA: "), ("".join(chosen_sections))
 
 def answer_query_with_context(
     query: str,
     df: pd.DataFrame,
     document_embeddings: dict[(str, str), np.array],
-) -> str:
-    prompt = construct_prompt(
+) -> tuple[str, str]:
+    prompt, context = construct_prompt(
         query,
         document_embeddings,
         df
@@ -142,7 +142,7 @@ def answer_query_with_context(
                 **COMPLETIONS_API_PARAMS
             )
 
-    return response["choices"][0]["text"].strip(" \n")
+    return response["choices"][0]["text"].strip(" \n"), context
 
 def index(request):
     return render(request, "index.html", { "default_question": "What is The Minimalist Entrepreneur about?" })
@@ -165,8 +165,8 @@ def ask(request):
 
     s3 = boto3.client(
         's3',
-        aws_access_key_id="AKIAYXDBVZ7BCW3GF67W",
-        aws_secret_access_key="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"
+        aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+        aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
     )
 
     s3.download_file('askbook', 'pages.csv', 'pages.csv')
@@ -177,7 +177,7 @@ def ask(request):
 
     document_embeddings = load_embeddings('embeddings.csv')
 
-    answer = answer_query_with_context(question_asked, df, document_embeddings)
+    answer, context = answer_query_with_context(question_asked, df, document_embeddings)
     print(answer)
 
     project_uuid = '6314e4df'
@@ -197,7 +197,7 @@ def ask(request):
         raw=None
     )
 
-    question = Question(question=question_asked, answer=answer, audio_src_url=response['item']['audio_src'])
+    question = Question(question=question_asked, answer=answer, context=context, audio_src_url=response['item']['audio_src'])
     question.save()
 
     return JsonResponse({ "question": question.question, "answer": answer, "audio_src_url": question.audio_src_url, "id": question.pk })
@@ -249,13 +249,17 @@ def question(request, id):
     return render(request, "index.html", { "default_question": question.question, "answer": question.answer if not question.real_answer else question.real_answer, "audio_src_url": question.audio_src_url })
 
 def metadata(request):
+    real_only = request.GET.get("real_only", "")
     filename = "metadata.jsonl"
     data = ""
 
     for question in Question.objects.all().order_by('-ask_count'):
-        # if not question.real_answer:
-        #     continue
-        data = data + json.dumps({"prompt": question.question, "completion": question.answer if not question.real_answer else question.real_answer }) + "\n"
+        if real_only and not question.real_answer:
+            continue
+
+        prompt = "Sahil Lavingia is the founder and CEO of Gumroad, and the author of the book The Minimalist Entrepreneur (also known as TME). He keeps his answers to three sentences maximum, and speaks in complete sentences. He is punchy and irreverant, but also empathetic and kind. \n\nContext, pulled from The Minimalist Entrepreneur:\n " + question.context + " \nQuestion from a reader: " + question.question + "\n\nSahil's answer:\n\n###\n\n"
+
+        data = data + json.dumps({"prompt": prompt, "completion": question.answer if not question.real_answer else question.real_answer }) + "\n"
 
     response = HttpResponse(data, content_type="application/jsonl")
     response['Content-Disposition'] = "attachment; filename=%s" % filename

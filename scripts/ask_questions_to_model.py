@@ -8,7 +8,7 @@ import boto3
 
 openai.api_key = "sk-DOiDZHHE1f1tvxnO5zs103vHelanA6BVBVO44cN7"
 
-COMPLETIONS_MODEL = "curie:ft-personal-2022-11-06-17-24-31" # "text-davinci-002"
+COMPLETIONS_MODEL = "curie:ft-personal-2022-11-12-23-08-55" # "text-davinci-002"
 
 s3 = boto3.client(
     's3',
@@ -97,9 +97,8 @@ def construct_prompt(question: str, context_embeddings: dict, df: pd.DataFrame) 
     chosen_sections_indexes = []
 
     for _, section_index in most_relevant_document_sections:
-        # Add contexts until we run out of space.
-        print(section_index)
-        print(df.loc[section_index])
+        # print(section_index)
+        # print(df.loc[section_index])
         document_section = df.loc[section_index]
 
         chosen_sections_len += document_section.tokens + separator_len
@@ -109,9 +108,12 @@ def construct_prompt(question: str, context_embeddings: dict, df: pd.DataFrame) 
         chosen_sections.append(SEPARATOR + document_section.content)
         chosen_sections_indexes.append(str(section_index))
 
-    # Useful diagnostic information
-    print(f"Selected {len(chosen_sections)} document sections:")
-    print("\n".join(chosen_sections_indexes))
+    # print(f"Selected {len(chosen_sections)} document sections:")
+    # print("\n".join(chosen_sections_indexes))
+
+    header = """Context:\n"""
+
+    return header + "".join(chosen_sections) + "\n\n\n" + question + "\n\n###\n\n"
 
     header = """Sahil Lavingia is the founder and CEO of Gumroad, and the author of the book The Minimalist Entrepreneur (also known as TME). These are questions and answers by him. Please keep your answers to three sentences maximum, and speak in complete sentences. Stop speaking once your point is made.\n\nContext that may be useful, pulled from The Minimalist Entrepreneur:\n"""
 
@@ -131,7 +133,7 @@ def construct_prompt(question: str, context_embeddings: dict, df: pd.DataFrame) 
 COMPLETIONS_API_PARAMS = {
     # We use temperature of 0.0 because it gives the most predictable, factual answer.
     "temperature": 0.0,
-    "max_tokens": 75,
+    "max_tokens": 150,
     "model": COMPLETIONS_MODEL,
 }
 
@@ -146,7 +148,7 @@ def answer_query_with_context(
         df
     )
 
-    print("===\n", prompt)
+    # print("===\n", prompt)
 
     response = openai.Completion.create(
                 prompt=prompt,
@@ -155,13 +157,7 @@ def answer_query_with_context(
 
     return response["choices"][0]["text"].strip(" \n")
 
-print(answer_query_with_context("How to choose what business to start?", df, document_embeddings))
-# print(answer_query_with_context("Should we start the business on the side first or should we put full effort right from the start?", df, document_embeddings))
-# print(answer_query_with_context("Should we sell first than build or the other way around?", df, document_embeddings))
-# print(answer_query_with_context("Andrew Chen has a book on this so maybe touché, but how should founders think about the cold start problem? Businesses are hard to start, and even harder to sustain but the latter is somewhat defined and structured, whereas the former is the vast unknown. Not sure if it’s worthy, but this is something I have personally struggled with.", df, document_embeddings))
-# print(answer_query_with_context("What is one business that you think is ripe for a minimalist Entrepreneur innovation that isn’t currently being pursued by your community?", df, document_embeddings))
-# print(answer_query_with_context("How can you tell if your pricing is right? If you are leaving money on the table?", df, document_embeddings))
-# print(answer_query_with_context("Why is the name of your book 'the minimalist entrepreneur' ?", df, document_embeddings))
-# print(answer_query_with_context("How long it takes to write TME?", df, document_embeddings))
-# print(answer_query_with_context("What is the best way to distribute surveys to test my product idea?", df, document_embeddings))
-# print(answer_query_with_context("How do you know, when to quit?", df, document_embeddings))
+print(answer_query_with_context("What's your name?", df, document_embeddings))
+print(answer_query_with_context("How do I choose what kind of business to start?", df, document_embeddings))
+print(answer_query_with_context("Should I sell first then build the product, or the other way around?", df, document_embeddings))
+print(answer_query_with_context("I've spent one year building my business and don't have any revenue yet. What did I do wrong?", df, document_embeddings))
