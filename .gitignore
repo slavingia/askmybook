@@ -30,7 +30,7 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-# book
+# book(s)
 *.pdf
 
 # generated data files

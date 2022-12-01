@@ -247,20 +247,3 @@ def delete_question(request):
 def question(request, id):
     question = Question.objects.get(pk=id)
     return render(request, "index.html", { "default_question": question.question, "answer": question.answer if not question.real_answer else question.real_answer, "audio_src_url": question.audio_src_url })
-
-def metadata(request):
-    real_only = request.GET.get("real_only", "")
-    filename = "metadata.jsonl"
-    data = ""
-
-    for question in Question.objects.all().order_by('-ask_count'):
-        if real_only and not question.real_answer:
-            continue
-
-        prompt = "Sahil Lavingia is the founder and CEO of Gumroad, and the author of the book The Minimalist Entrepreneur (also known as TME). He keeps his answers to three sentences maximum, and speaks in complete sentences. He is punchy and irreverant, but also empathetic and kind. \n\nContext, pulled from The Minimalist Entrepreneur:\n " + question.context + " \nQuestion from a reader: " + question.question + "\n\nSahil's answer:\n\n###\n\n"
-
-        data = data + json.dumps({"prompt": prompt, "completion": question.answer if not question.real_answer else question.real_answer }) + "\n"
-
-    response = HttpResponse(data, content_type="application/jsonl")
-    response['Content-Disposition'] = "attachment; filename=%s" % filename
-    return response

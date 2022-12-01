@@ -5,7 +5,6 @@ from transformers import GPT2TokenizerFast
 
 import boto3
 
-
 openai.api_key = "sk-DOiDZHHE1f1tvxnO5zs103vHelanA6BVBVO44cN7"
 
 COMPLETIONS_MODEL = "curie:ft-personal-2022-11-12-23-08-55" # "text-davinci-002"
