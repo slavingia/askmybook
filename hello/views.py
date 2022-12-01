@@ -353,3 +353,59 @@ def ask_basb(request):
             )
 
     return JsonResponse({ "answer":  response["choices"][0]["text"].strip(" \n") })
+
+def construct_drbb_prompt(question: str, context_embeddings: dict, df: pd.DataFrame) -> tuple[str, str]:
+    """
+    Fetch relevant
+    """
+    most_relevant_document_sections = order_document_sections_by_query_similarity(question, context_embeddings)
+
+    chosen_sections = []
+    chosen_sections_len = 0
+    chosen_sections_indexes = []
+
+    for _, section_index in most_relevant_document_sections:
+        document_section = df.loc[section_index]
+
+        chosen_sections_len += document_section.tokens + separator_len
+        if chosen_sections_len > MAX_SECTION_LEN:
+            break
+
+        chosen_sections.append(SEPARATOR + document_section.content)
+        chosen_sections_indexes.append(str(section_index))
+
+    return """Context:\n""" + "".join(chosen_sections) + "\n\n\nQuestion directed to Marian Ffarmer: " + question + "\n\nAnswer from Marian Ffarmer: "
+
+@csrf_exempt
+def ask_drbb(request):
+    question_asked = request.GET.get("question", "")
+
+    if not question_asked.endswith('?'):
+        question_asked += '?'
+
+    s3 = boto3.client(
+        's3',
+        aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+        aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
+    )
+
+    s3.download_file('askbook', 'drbb.pdf.pages.csv', 'pages.csv')
+    s3.download_file('askbook', 'drbb.pdf.embeddings.csv', 'embeddings.csv')
+
+    df = pd.read_csv('pages.csv')
+    df = df.set_index(["title"])
+
+    document_embeddings = load_embeddings('embeddings.csv')
+
+    prompt = construct_drbb_prompt(
+        question_asked,
+        document_embeddings,
+        df
+    )
+
+    response = openai.Completion.create(
+                prompt=prompt,
+                **COMPLETIONS_API_PARAMS
+            )
+
+    return JsonResponse({ "answer":  response["choices"][0]["text"].strip(" \n") })

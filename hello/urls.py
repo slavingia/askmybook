@@ -19,6 +19,7 @@ urlpatterns = [
     path("ask", hello.views.ask, name="ask"),
     path("ask_tns", hello.views.ask_tns, name="ask_tns"),
     path("ask_basb", hello.views.ask_basb, name="ask_basb"),
+    path("ask_drbb", hello.views.ask_drbb, name="ask_drbb"),
     path("question/<int:id>", hello.views.question, name="question"),
     path("db", hello.views.db, name="db"),
     path("admin/", admin.site.urls),
