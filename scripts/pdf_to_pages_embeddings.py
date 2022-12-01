@@ -1,3 +1,9 @@
+from dotenv import load_dotenv
+import os
+
+# Use load_env to trace the path of .env:
+load_dotenv('.env')
+
 import pandas as pd
 from typing import Set
 from transformers import GPT2TokenizerFast
@@ -11,17 +17,13 @@ import pandas as pd
 import openai
 import csv
 import numpy as np
+import os
 import pickle
 from transformers import GPT2TokenizerFast
 
-openai.api_key = "sk-DOiDZHHE1f1tvxnO5zs103vHelanA6BVBVO44cN7"
+openai.api_key = os.environ["OPENAI_API_KEY"]
 
-COMPLETIONS_MODEL = "text-davinci-002"
-
-df = pd.read_csv('pages.csv')
-df = df.set_index(["title"])
-print(f"{len(df)} rows in the data.")
-print(df.sample(5))
+COMPLETIONS_MODEL = "text-davinci-003"
 
 MODEL_NAME = "curie"
 
@@ -55,7 +57,7 @@ parser.add_argument("--pdf", help="Name of PDF")
 
 args=parser.parse_args()
 
-filename = "{args.pdf}"
+filename = f"{args.pdf}"
 
 reader = PdfReader(filename)
 
@@ -65,10 +67,11 @@ for page in reader.pages:
     res += extract_pages(page.extract_text(), i)
     i += 1
 df = pd.DataFrame(res, columns=["title", "content", "tokens"])
+df = df[df.tokens<2046]
 df = df.reset_index().drop('index',axis=1) # reset index
 df.head()
 
-df.to_csv('{filename}.pages.csv', index=False)
+df.to_csv(f'{filename}.pages.csv', index=False)
 
 def get_embedding(text: str, model: str) -> list[float]:
     result = openai.Embedding.create(
@@ -95,7 +98,7 @@ def compute_doc_embeddings(df: pd.DataFrame) -> dict[tuple[str], list[float]]:
 
 doc_embeddings = compute_doc_embeddings(df)
 
-with open('{filename}.embeddings.csv', 'w') as f:
+with open(f'{filename}.embeddings.csv', 'w') as f:
     writer = csv.writer(f)
     writer.writerow(["title"] + list(range(4096)))
     for i, embedding in list(doc_embeddings.items()):

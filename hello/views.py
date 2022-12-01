@@ -211,3 +211,28 @@ def db(request):
 def question(request, id):
     question = Question.objects.get(pk=id)
     return render(request, "index.html", { "default_question": question.question, "answer": question.answer, "audio_src_url": question.audio_src_url })
+
+@csrf_exempt
+def ask_tns(request):
+    question_asked = request.GET.get("question", "")
+
+    if not question_asked.endswith('?'):
+        question_asked += '?'
+
+    s3 = boto3.client(
+        's3',
+        aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+        aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
+    )
+
+    s3.download_file('askbook', 'tns.pages.csv', 'pages.csv')
+    s3.download_file('askbook', 'tns.embeddings.csv', 'embeddings.csv')
+
+    df = pd.read_csv('pages.csv')
+    df = df.set_index(["title"])
+
+    document_embeddings = load_embeddings('embeddings.csv')
+
+    answer, context = answer_query_with_context(question_asked, df, document_embeddings)
+
+    return JsonResponse({ "question": question.question, "answer": answer })
