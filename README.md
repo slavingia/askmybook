@@ -1,17 +1,18 @@
 ## Setup
 
-- Fill in `.env` with proper env vars
+1. Fill in `.env` with your proper env vars.
+
+2. Turn your PDF into embeddings for GPT-3:
+
+```
+python pdf_to_pages_embeddings.py --pdf book.pdf
+```
+
 - `python manage.py makemigrations` and `python manage.py migrate` to setup DB tables
 - `python manage.py runserver` to run locally
 
 Deploys the `main` branch automatically to Heroku.
 
-### Scripts
 
-Add book PDF to `static` folder.
-
-- `python pdf_to_pages_content.py` to turn local PDF into structured page content
-- `python content_to_embeddings.py` to turn structured page content into embeddings
-- `python ask_questions_to_model.py` to ask GPT-3 questions using embeddings
 
 Upload these files to S3 and update the URLs.
