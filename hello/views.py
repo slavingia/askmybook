@@ -22,7 +22,7 @@ import os
 Resemble.api_key(os.environ["RESEMBLE_API_KEY"])
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
-COMPLETIONS_MODEL = "text-davinci-002"
+COMPLETIONS_MODEL = "text-davinci-003"
 
 MODEL_NAME = "curie"
 
