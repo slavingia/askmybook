@@ -161,7 +161,7 @@ def ask(request):
         print("previously asked and answered: " + previous_question.answer + " ( " + previous_question.audio_src_url + ")")
         previous_question.ask_count = previous_question.ask_count + 1
         previous_question.save()
-        return JsonResponse({ "question": previous_question.question, "answer": previous_question.answer if not previous_question.real_answer else previous_question.real_answer, "audio_src_url": audio_src_url, "id": previous_question.pk })
+        return JsonResponse({ "question": previous_question.question, "answer": previous_question.answer, "audio_src_url": audio_src_url, "id": previous_question.pk })
 
     s3 = boto3.client(
         's3',
@@ -204,46 +204,10 @@ def ask(request):
 
 @login_required
 def db(request):
-    answered_questions_count = Question.objects.all().exclude(real_answer__isnull=True).count()
-    questions = Question.objects.all().exclude(real_answer__isnull=False).order_by('-ask_count')
+    questions = Question.objects.all().order_by('-ask_count')
 
-    return render(request, "db.html", { "questions": questions, "answered_questions_count": answered_questions_count })
-
-def real_answer(request):
-    id = request.POST.get("id", "")
-    answer = request.POST.get("answer", "")
-
-    question = Question.objects.get(pk=id)
-    question.real_answer = answer
-
-    project_uuid = '6314e4df'
-    voice_uuid = '0eb3a3f1'
-
-    response = Resemble.v2.clips.create_sync(
-        project_uuid,
-        voice_uuid,
-        answer,
-        title=None,
-        sample_rate=None,
-        output_format=None,
-        precision=None,
-        include_timestamps=None,
-        is_public=None,
-        is_archived=None,
-        raw=None
-    )
-
-    question.audio_src_url = response['item']['audio_src']
-    question.save()
-
-    return JsonResponse({ "question": question.question, "answer": question.real_answer })
-
-def delete_question(request):
-    id = request.POST.get("id", "")
-    Question.objects.get(pk=id).delete()
-
-    return redirect("/queue")
+    return render(request, "db.html", { "questions": questions })
 
 def question(request, id):
     question = Question.objects.get(pk=id)
-    return render(request, "index.html", { "default_question": question.question, "answer": question.answer if not question.real_answer else question.real_answer, "audio_src_url": question.audio_src_url })
+    return render(request, "index.html", { "default_question": question.question, "answer": question.answer, "audio_src_url": question.audio_src_url })

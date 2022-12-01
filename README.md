@@ -1,9 +1,7 @@
-# askbook
+## Setup
 
-### Website / API
-
-- Fill in `.env` with env vars
-- `python manage.py makemigrations` and `python manage.py migrate` to setup db tables
+- Fill in `.env` with proper env vars
+- `python manage.py makemigrations` and `python manage.py migrate` to setup DB tables
 - `python manage.py runserver` to run locally
 
 Deploys the `main` branch automatically to Heroku.

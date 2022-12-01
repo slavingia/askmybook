@@ -9,54 +9,11 @@
   {% for question in questions %}
       <li>
         <strong>{{ question.question }}</strong>
-        {% if question.real_answer %}
-          <p>{{ question.real_answer }}</p>
-          <p style="text-decoration: line-through;">{{ question.answer }}</p>
-        {% else %}
-          <p>{{ question.answer }}</p>
-          <form action="/real_answer" method="post" class="small">
-            {% csrf_token %}
-            <input type="hidden" value="{{ question.id }}" name="id" />
-            <textarea autofocus="autofocus" name="answer" id="answer">{{ question.answer }}</textarea>
-            <button type="submit" id="button">Real answer</button>
-          </form>
-        {% endif %}
+        <p>{{ question.answer }}</p>
 
         <p><small>Asked {{ question.ask_count }} times</small></p>
-
-        <form action="/delete_question" method="post">
-          {% csrf_token %}
-          <input type="hidden" value="{{ question.id }}" name="id" />
-          <a href="#" onclick="parentNode.submit();" style="color: #900; border: 0; font-size: 1rem;">Delete question</a>
-        </form>
       </li>
   {% endfor %}
 </ul>
-
-<script>
-  $(document).ready(function() {
-    $("form").submit(function(e) {
-      let form = $(this);
-      let questionContainer = form.find("li");
-      let askButton = form.find("button");
-
-      $(askButton).text("Answering...").prop("disabled", true);
-
-      $.ajax({
-        type: 'POST',
-        url: '/real_answer',
-        data: form.serialize(),
-        datatype: "json",
-        encode: true
-      }).done(function(data) {
-        location.reload();
-      });
-
-      e.preventDefault();
-      return false;
-    });
-
-  });
-</script>
 
 {% endblock %}
