@@ -18,16 +18,9 @@ import boto3
 import json
 
 import os
-import environ
 
-from dotenv import load_dotenv
-load_dotenv()
-
-env = environ.Env()
-environ.Env.read_env()
-
-Resemble.api_key(env("RESEMBLE_API_KEY"))
-openai.api_key = env("OPENAI_API_KEY")
+Resemble.api_key(os.environ("RESEMBLE_API_KEY"))
+openai.api_key = os.environ("OPENAI_API_KEY")
 
 COMPLETIONS_MODEL = "text-davinci-003"
 
