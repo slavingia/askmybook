@@ -8,7 +8,7 @@
 python scripts/pdf_to_pages_embeddings.py --pdf book.pdf
 ```
 
-3. Upload these files to S3 and update the names refencing these within `views.py`.
+3. Upload these files to S3 and reference these within `views.py`.
 
 4. Set up database tables:
 

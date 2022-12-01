@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import os
 import sys
-import environ
 
 from dotenv import load_dotenv
 load_dotenv()
