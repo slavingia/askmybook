@@ -1,6 +1,6 @@
 ## Setup
 
-1. Fill in `.env` with your proper env variables for OpenAI, AWS, and Resemble.
+1. Create and fill in `.env` using `.env.example` as an example.
 
 2. Turn your PDF into embeddings for GPT-3:
 
@@ -8,21 +8,42 @@
 python scripts/pdf_to_pages_embeddings.py --pdf book.pdf
 ```
 
-3. Upload these files to S3 and reference these within `views.py`.
-
-4. Set up database tables:
+3. Set up database tables:
 
 ```
 python manage.py makemigrations
 python manage.py migrate
 ```
 
+4. Other things to update:
+
+- Book title
+- Book cover image
+- URL to purchase book
+- Author name and bio
+
+## Deploy to Heroku
+
+1. Create a Heroku app:
+
+```
+heroku create askmybook
+```
+
+Set config variables on Heroku to match `.env`.
+
+2. Push to Heroku:
+
+```
+git push heroku main
+heroku ps:scale web=1
+heroku run python manage.py migrate
+heroku open
+heroku domains:add askmybook.com
+```
+
 ### Run locally
 
 ```
-python manage.py runserver
+heroku local
 ```
-
-## Deployment
-
-This repo automatically deploys the `main` branch to Heroku.

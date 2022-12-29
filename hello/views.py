@@ -1,9 +1,8 @@
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-import random
 
 from .models import Question
 
@@ -12,10 +11,6 @@ import openai
 import numpy as np
 
 from resemble import Resemble
-
-import boto3
-
-import json
 
 import os
 
@@ -91,7 +86,7 @@ def load_embeddings(fname: str) -> dict[tuple[str, str], list[float]]:
 
 def construct_prompt(question: str, context_embeddings: dict, df: pd.DataFrame) -> tuple[str, str]:
     """
-    Fetch relevant
+    Fetch relevant embeddings
     """
     most_relevant_document_sections = order_document_sections_by_query_similarity(question, context_embeddings)
 
@@ -100,10 +95,13 @@ def construct_prompt(question: str, context_embeddings: dict, df: pd.DataFrame) 
     chosen_sections_indexes = []
 
     for _, section_index in most_relevant_document_sections:
-        document_section = df.loc[section_index]
+        document_section = df.loc[df['title'] == section_index].iloc[0]
 
         chosen_sections_len += document_section.tokens + separator_len
         if chosen_sections_len > MAX_SECTION_LEN:
+            space_left = MAX_SECTION_LEN - chosen_sections_len - len(SEPARATOR)
+            chosen_sections.append(SEPARATOR + document_section.content[:space_left])
+            chosen_sections_indexes.append(str(section_index))
             break
 
         chosen_sections.append(SEPARATOR + document_section.content)
@@ -163,22 +161,9 @@ def ask(request):
         previous_question.save()
         return JsonResponse({ "question": previous_question.question, "answer": previous_question.answer, "audio_src_url": audio_src_url, "id": previous_question.pk })
 
-    s3 = boto3.client(
-        's3',
-        aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
-        aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"]
-    )
-
-    s3.download_file('askbook', 'pages.csv', 'pages.csv')
-    s3.download_file('askbook', 'embeddings.csv', 'embeddings.csv')
-
-    df = pd.read_csv('pages.csv')
-    df = df.set_index(["title"])
-
-    document_embeddings = load_embeddings('embeddings.csv')
-
+    df = pd.read_csv('book.pdf.pages.csv')
+    document_embeddings = load_embeddings('book.pdf.embeddings.csv')
     answer, context = answer_query_with_context(question_asked, df, document_embeddings)
-    print(answer)
 
     project_uuid = '6314e4df'
     voice_uuid = '0eb3a3f1'
