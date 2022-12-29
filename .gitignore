@@ -34,7 +34,6 @@ yarn-error.log*
 *.pdf
 
 # generated data files
-*.csv
 
 # from python heroku
 venv
