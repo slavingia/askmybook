@@ -23,11 +23,12 @@ See https://github.com/psycopg/psycopg2/issues/1200
 python scripts/pdf_to_pages_embeddings.py --pdf book.pdf
 ```
 
-4. Set up database tables:
+4. Set up database tables and collect static files:
 
 ```
 python manage.py makemigrations
 python manage.py migrate
+python manage.py collectstatic
 ```
 
 5. Other things to update:
@@ -42,7 +43,7 @@ python manage.py migrate
 1. Create a Heroku app:
 
 ```
-heroku create askmybook
+heroku create yourappname
 ```
 
 Set config variables on Heroku to match `.env`.
@@ -63,4 +64,10 @@ Note that this repo does not contain the `pages.csv` and `embeddings.csv` you'll
 
 ```
 heroku local
+```
+
+*OS X Monterey Note MacOS now uses port 5000 (the default port), so you will need to run heroku local on a different port. For example:
+
+```
+heroku local -p 5001
 ```
