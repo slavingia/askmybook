@@ -17,20 +17,20 @@ brew install postgresql
 See https://github.com/psycopg/psycopg2/issues/1200
 
 
-2. Turn your PDF into embeddings for GPT-3:
+3. Turn your PDF into embeddings for GPT-3:
 
 ```
 python scripts/pdf_to_pages_embeddings.py --pdf book.pdf
 ```
 
-3. Set up database tables:
+4. Set up database tables:
 
 ```
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-4. Other things to update:
+5. Other things to update:
 
 - Book title
 - Book cover image
