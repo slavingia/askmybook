@@ -2,6 +2,21 @@
 
 1. Create and fill in `.env` using `.env.example` as an example.
 
+2. Install required Python packages
+
+```
+pip install -r requirements.txt
+```
+
+Mac M1 / OS X Note: if you get an error installing psycopg2, you may need:
+
+```
+brew install postgresql
+```
+
+See https://github.com/psycopg/psycopg2/issues/1200
+
+
 2. Turn your PDF into embeddings for GPT-3:
 
 ```
