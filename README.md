@@ -66,7 +66,7 @@ Note that this repo does not contain the `pages.csv` and `embeddings.csv` you'll
 heroku local
 ```
 
-Note: macOS Monterey uses port 5000 (the default port) for Airplay sharing, so you will need to run heroku local on a different port. For example:
+Note: macOS Monterey uses port 5000 (the default port) for AirPlay sharing, so you will need to run heroku local on a different port. For example:
 
 ```
 heroku local -p 5001
