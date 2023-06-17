@@ -58,10 +58,6 @@ heroku open
 heroku domains:add askmybook.com
 ```
 
-Note that this repo does not contain the `pages.csv` and `embeddings.csv` you'll need, generated above.
-
-You can remove `.csv` from your own `.gitignore` and push them manually via `git push heroku main`.
-
 ### Run locally
 
 ```
@@ -75,3 +71,13 @@ Note: macOS Monterey uses port 5000 (the default port) for AirPlay sharing, so y
 ```
 heroku local -p 5001
 ```
+
+### Deploying
+
+Deploy to Heroku with:
+
+```
+git push heroku main --no-verify
+```
+
+`no-verify` is added due to using Git LFS for the large embedding file.
