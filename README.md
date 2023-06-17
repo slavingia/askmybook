@@ -58,11 +58,15 @@ heroku open
 heroku domains:add askmybook.com
 ```
 
-Note that this repo does not contain the `pages.csv` and `embeddings.csv` you'll need, generated above. You can remove `.csv` from your own `.gitignore` and push them manually via `git push heroku main`.
+Note that this repo does not contain the `pages.csv` and `embeddings.csv` you'll need, generated above.
+
+You can remove `.csv` from your own `.gitignore` and push them manually via `git push heroku main`.
 
 ### Run locally
 
 ```
+source venv/source/activate
+pip install -r requirements.txt
 heroku local
 ```
 

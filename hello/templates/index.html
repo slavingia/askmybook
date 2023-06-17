@@ -30,10 +30,6 @@
   {% else %}
     <p id="answer-container" class="hidden"><strong>Answer:</strong> <span id="answer"></span> <button id="ask-another-button" style="display: none;">Ask another question</button></p>
   {% endif %}
-
-  <audio id="audio" controls autoplay>
-    <source src="{{ audio_src_url }}" type="audio/wav">
-  </audio>
 </div>
 
 <script>
@@ -64,7 +60,6 @@
       $(".buttons").show();
       document.getElementById('answer-container').classList.remove("showing");
       clearTimeout(window.answerShower);
-      document.getElementById('audio').pause();
       $("#ask-another-button").css("display", "none");
     });
 
@@ -72,7 +67,6 @@
       $(".buttons").show();
       document.getElementById('answer-container').classList.remove("showing");
       clearTimeout(window.answerShower);
-      document.getElementById('audio').pause();
       $("#ask-another-button").css("display", "none");
       $("textarea").select();
     });
@@ -97,19 +91,11 @@
       }).done(function(data) {
         $(".buttons").hide();
 
-        var audio = document.getElementById('audio');
-        audio.src = data.audio_src_url;
-
         var answer = document.getElementById('answer');
         answer.innerHTML = "";
         document.getElementById('answer-container').classList.add("showing");
 
-        window.answerShower = setTimeout(function() {
-          showText("#answer", data.answer, 0);
-        }, 1200);
-
-        audio.volume = 0.3;
-        audio.play();
+        showText("#answer", data.answer, 0);
 
         askButton.textContent = "Ask question";
         askButton.disabled = false;
