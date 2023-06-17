@@ -3,7 +3,6 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from dotenv import load_dotenv
 
 from .models import Question
 
@@ -12,8 +11,6 @@ import openai
 import numpy as np
 
 import os
-
-load_dotenv('.env')
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
