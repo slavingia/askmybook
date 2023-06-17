@@ -43,10 +43,10 @@ python manage.py collectstatic
 1. Create a Heroku app:
 
 ```
-heroku create yourappname
+heroku create askmybook
 ```
 
-Set config variables on Heroku to match `.env`.
+Set config variables on Heroku to match your `.env`.
 
 2. Push to Heroku:
 
