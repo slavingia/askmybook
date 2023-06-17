@@ -71,7 +71,7 @@ df = df[df.tokens<2046]
 df = df.reset_index().drop('index',axis=1) # reset index
 df.head()
 
-df.to_csv(f'{filename}.pages.csv', index=False)
+df.to_csv(f'book.pdf.pages.csv', index=False)
 
 def get_embedding(text: str, model: str) -> list[float]:
     result = openai.Embedding.create(
@@ -98,7 +98,7 @@ def compute_doc_embeddings(df: pd.DataFrame) -> dict[tuple[str], list[float]]:
 
 doc_embeddings = compute_doc_embeddings(df)
 
-with open(f'{filename}.embeddings.csv', 'w') as f:
+with open(f'book.pdf.embeddings.csv', 'w') as f:
     writer = csv.writer(f)
     writer.writerow(["title"] + list(range(4096)))
     for i, embedding in list(doc_embeddings.items()):
