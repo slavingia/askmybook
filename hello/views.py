@@ -11,13 +11,10 @@ import pandas as pd
 import openai
 import numpy as np
 
-from resemble import Resemble
-
 import os
 
 load_dotenv('.env')
 
-Resemble.api_key(os.environ["RESEMBLE_API_KEY"])
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
 COMPLETIONS_MODEL = "text-davinci-003"
@@ -159,10 +156,10 @@ def ask(request):
     audio_src_url = previous_question and previous_question.audio_src_url if previous_question else None
 
     if audio_src_url:
-        print("previously asked and answered: " + previous_question.answer + " ( " + previous_question.audio_src_url + ")")
+        print("previously asked and answered: " + previous_question.answer)
         previous_question.ask_count = previous_question.ask_count + 1
         previous_question.save()
-        return JsonResponse({ "question": previous_question.question, "answer": previous_question.answer, "audio_src_url": audio_src_url, "id": previous_question.pk })
+        return JsonResponse({ "question": previous_question.question, "answer": previous_question.answer, "id": previous_question.pk })
 
     df = pd.read_csv('book.pdf.pages.csv')
     document_embeddings = load_embeddings('book.pdf.embeddings.csv')
@@ -171,24 +168,10 @@ def ask(request):
     project_uuid = '6314e4df'
     voice_uuid = '0eb3a3f1'
 
-    response = Resemble.v2.clips.create_sync(
-        project_uuid,
-        voice_uuid,
-        answer,
-        title=None,
-        sample_rate=None,
-        output_format=None,
-        precision=None,
-        include_timestamps=None,
-        is_public=None,
-        is_archived=None,
-        raw=None
-    )
-
-    question = Question(question=question_asked, answer=answer, context=context, audio_src_url=response['item']['audio_src'])
+    question = Question(question=question_asked, answer=answer, context=context)
     question.save()
 
-    return JsonResponse({ "question": question.question, "answer": answer, "audio_src_url": question.audio_src_url, "id": question.pk })
+    return JsonResponse({ "question": question.question, "answer": answer, "id": question.pk })
 
 @login_required
 def db(request):
