@@ -150,9 +150,8 @@ def ask(request):
         question_asked += '?'
 
     previous_question = Question.objects.filter(question=question_asked).first()
-    audio_src_url = previous_question and previous_question.audio_src_url if previous_question else None
 
-    if audio_src_url:
+    if previous_question:
         print("previously asked and answered: " + previous_question.answer)
         previous_question.ask_count = previous_question.ask_count + 1
         previous_question.save()
@@ -178,4 +177,4 @@ def db(request):
 
 def question(request, id):
     question = Question.objects.get(pk=id)
-    return render(request, "index.html", { "default_question": question.question, "answer": question.answer, "audio_src_url": question.audio_src_url })
+    return render(request, "index.html", { "default_question": question.question, "answer": question.answer })
