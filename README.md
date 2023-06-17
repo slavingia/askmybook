@@ -2,20 +2,36 @@
 
 1. Create and fill in `.env` using `.env.example` as an example.
 
-2. Turn your PDF into embeddings for GPT-3:
+2. Install required Python packages
+
+```
+pip install -r requirements.txt
+```
+
+Mac M1 / OS X Note: if you get an error installing psycopg2, you may need:
+
+```
+brew install postgresql
+```
+
+See https://github.com/psycopg/psycopg2/issues/1200
+
+
+3. Turn your PDF into embeddings for GPT-3:
 
 ```
 python scripts/pdf_to_pages_embeddings.py --pdf book.pdf
 ```
 
-3. Set up database tables:
+4. Set up database tables and collect static files:
 
 ```
 python manage.py makemigrations
 python manage.py migrate
+python manage.py collectstatic
 ```
 
-4. Other things to update:
+5. Other things to update:
 
 - Book title
 - Book cover image
@@ -27,7 +43,7 @@ python manage.py migrate
 1. Create a Heroku app:
 
 ```
-heroku create askmybook
+heroku create yourappname
 ```
 
 Set config variables on Heroku to match `.env`.
@@ -48,4 +64,10 @@ Note that this repo does not contain the `pages.csv` and `embeddings.csv` you'll
 
 ```
 heroku local
+```
+
+Note: macOS Monterey uses port 5000 (the default port) for AirPlay sharing, so you will need to run heroku local on a different port. For example:
+
+```
+heroku local -p 5001
 ```
