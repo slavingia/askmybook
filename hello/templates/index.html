@@ -5,23 +5,24 @@
 
 <div class="header">
   <div class="logo">
-    <a href="https://www.amazon.com/Minimalist-Entrepreneur-Great-Founders-More/dp/0593192397">
+    <a href="https://www.amazon.com/Learning-Ray-Flexible-Distributed-Machine/dp/1098117220/">
       <img src="{% static 'book.png' %}" loading="lazy" />
     </a>
-    <h1>Ask My Book</h1>
+    <h1>Ask My Book Anything!</h1>
   </div>
 </div>
 
 <div class="main">
-  <p class="credits">This is an experiment in using AI to make my book's content more accessible. Ask a question and AI'll answer it in real-time:</p>
+  <p class="credits">A quick experiment to make the contents of "Learning Ray" more
+      accessible with the help of an AI model (OpenAI's GPT-3 text-davinci-003).
+  </p>
 
   <form action="/ask" method="post">
     {% csrf_token %}
     <textarea name="question" id="question">{{ default_question }}</textarea>
 
     <div class="buttons" {% if answer %}style="display: none"{% endif %}>
-      <button type="submit" id="ask-button">Ask question</button>
-      <button id="lucky-button" style="background: #eee; border-color: #eee; color: #444;" data>I'm feeling lucky</button>
+      <button type="submit" id="ask-button">Go</button>
     </div>
   </form>
 
@@ -31,9 +32,6 @@
     <p id="answer-container" class="hidden"><strong>Answer:</strong> <span id="answer"></span> <button id="ask-another-button" style="display: none;">Ask another question</button></p>
   {% endif %}
 
-  <audio id="audio" controls autoplay>
-    <source src="{{ audio_src_url }}" type="audio/wav">
-  </audio>
 </div>
 
 <script>
@@ -52,13 +50,6 @@
         $("#ask-another-button").css("display", "block");
       }
     }
-
-    $("#lucky-button").click(function(e) {
-      var options = ["What is a minimalist entrepreneur?", "What is your definition of community?", "How do I decide what kind of business I should start?"],
-          random = ~~(Math.random() * options.length);
-
-      $("textarea").val(options[random]);
-    });
 
     $("textarea").bind('input propertychange', function(e) {
       $(".buttons").show();
@@ -97,8 +88,6 @@
       }).done(function(data) {
         $(".buttons").hide();
 
-        var audio = document.getElementById('audio');
-        audio.src = data.audio_src_url;
 
         var answer = document.getElementById('answer');
         answer.innerHTML = "";
@@ -108,8 +97,6 @@
           showText("#answer", data.answer, 0);
         }, 1200);
 
-        audio.volume = 0.3;
-        audio.play();
 
         askButton.textContent = "Ask question";
         askButton.disabled = false;
@@ -124,7 +111,7 @@
 </script>
 
 <footer>
-  <p class="credits">Project by <a href="https://twitter.com/shl">Sahil Lavingia</a> • <a href="https://github.com/slavingia/askmybook">Fork on GitHub</a></a></p>
+   <a href="https://github.com/slavingia/askmybook">Fork on GitHub</a></a></p>
 </footer>
 
 {% endblock %}

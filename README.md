@@ -1,6 +1,7 @@
-## Setup
+# Ask my book
 
-1. Create and fill in `.env` using `.env.example` as an example.
+1. Create and fill in `.env` using `.env.example` as an example. You will need 
+   a `RESEMBLE_API_KEY`, `OPENAI_API_KEY`, and a `SECRET_KEY` for Heroku.
 
 2. Install required Python packages
 
@@ -14,8 +15,6 @@ Mac M1 / OS X Note: if you get an error installing psycopg2, you may need:
 brew install postgresql
 ```
 
-See https://github.com/psycopg/psycopg2/issues/1200
-
 
 3. Turn your PDF into embeddings for GPT-3:
 
@@ -28,9 +27,10 @@ python scripts/pdf_to_pages_embeddings.py --pdf book.pdf
 ```
 python manage.py makemigrations
 python manage.py migrate
+python manage.py collectstatic
 ```
 
-5. Other things to update:
+5. Other things to update in `base.html`:
 
 - Book title
 - Book cover image
